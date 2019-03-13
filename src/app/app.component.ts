@@ -9,8 +9,17 @@ declare var XLSX;
 })
 export class AppComponent {
 
+  loadAPI: Promise<any>;
+
   constructor() {
-    console.log('load xlsx');
+    this.loadAPI = new Promise((resolve) => {
+      this.loadScript();
+      resolve(true);
+    });
+
+    this.loadAPI.then((res) => {
+      console.log('Script loaded');
+    });
   }
 
   Upload() {
@@ -44,5 +53,24 @@ export class AppComponent {
 
     const excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
     console.log(excelRows);
+  }
+
+  public loadScript() {
+    let isFound = false;
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; ++i) {
+      if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes('xlsx')) {
+        isFound = true;
+      }
+    }
+
+    if (!isFound) {
+      const node = document.createElement('script');
+      node.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js';
+      node.type = 'text/javascript';
+      node.async = false;
+      node.charset = 'utf-8';
+      document.getElementsByTagName('head')[0].appendChild(node);
+    }
   }
 }
