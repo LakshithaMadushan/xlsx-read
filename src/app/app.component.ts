@@ -66,11 +66,15 @@ export class AppComponent {
 
     if (!isFound) {
       const node = document.createElement('script');
-      node.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js';
+      node.src = 'assets/xlsx.full.min.js';
       node.type = 'text/javascript';
       node.async = false;
       node.charset = 'utf-8';
       document.getElementsByTagName('head')[0].appendChild(node);
+
+      node.onerror = () => {
+        console.log('Error loading ' + node.src);
+      };
     }
   }
 }
